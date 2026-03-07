@@ -1,47 +1,28 @@
 export default async function handler(req, res) {
+  const { url } = req.query
 
-  // CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "*")
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-  res.setHeader("Access-Control-Allow-Headers", "*")
-
-  // Preflight request
-  if (req.method === "OPTIONS") {
-    res.status(200).end()
-    return
-  }
-
-  const target = req.query.url
-
-  if (!target) {
-    res.status(400).json({
-      error: "Missing url parameter"
-    })
+  if (!url) {
+    res.status(400).json({ error: "Missing url" })
     return
   }
 
   try {
-
-    const response = await fetch(target, {
-      method: "GET",
+    const response = await fetch(url, {
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
-        "Accept":
-          "text/html,application/json,application/xhtml+xml"
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122 Safari/537.36"
       }
     })
 
-    const body = await response.text()
+    const data = await response.text()
 
-    res.status(response.status).send(body)
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Methods", "GET")
+    res.setHeader("Access-Control-Allow-Headers", "*")
+
+    res.status(200).send(data)
 
   } catch (err) {
-
-    res.status(500).json({
-      error: "Proxy request failed",
-      message: err.message
-    })
-
+    res.status(500).json({ error: err.message })
   }
 }

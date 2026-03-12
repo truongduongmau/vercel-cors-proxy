@@ -9,6 +9,7 @@ export default async function handler(req, res) {
   try {
     const response = await fetch(url, {
       headers: {
+        "Cache-Control": "no-store",
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122 Safari/537.36"
       }
@@ -19,7 +20,8 @@ export default async function handler(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader("Access-Control-Allow-Methods", "GET")
     res.setHeader("Access-Control-Allow-Headers", "*")
-
+    res.setHeader("Cache-Control", "no-store")
+    
     res.status(200).send(data)
 
   } catch (err) {
